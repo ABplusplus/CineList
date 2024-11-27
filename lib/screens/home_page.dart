@@ -27,15 +27,16 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 40,
-                  left: 16,
-                  right: 16,
+                  top: 8,
+                  left: 48,
+                  //right: 16,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'assets/hunter_x_hunter.jpg', // Replace with your asset path
-                        height: 140,
+                        'assets/hunter_x_hunter.jpg',
+                        width: 400,
+                        height: 180,
                         fit: BoxFit.cover,
                       ),
                       const SizedBox(height: 16),
@@ -50,7 +51,9 @@ class HomePage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: const Text("Shows"),
+                            child: const Text("Shows",
+                                style: TextStyle(color: Colors.white)
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: () {},
@@ -60,7 +63,8 @@ class HomePage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: const Text("Anime"),
+                            child: const Text("Anime",
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),
@@ -87,7 +91,19 @@ class HomePage extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {},
-                child: const Text('Refresh'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Refresh',
+                    style: TextStyle(color: Colors.white)
+                ),
               ),
             ),
           ],
