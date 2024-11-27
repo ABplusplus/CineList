@@ -1,5 +1,6 @@
-//import 'package:cinelist/screens/login_page.dart';
+import 'package:cinelist/screens/login_page.dart';
 import 'package:cinelist/screens/home_page.dart';
+import 'package:cinelist/screens/search_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       ),
         //home: const LoginPage(),
         home: const HomePage(),
+        //home: const SearchPage(),
       debugShowCheckedModeBanner: false
     );
 

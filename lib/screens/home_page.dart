@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cinelist/widgets/bottom_nav_bar.dart'; // Import the BottomNavBar widget
+import 'package:cinelist/widgets/bottom_nav_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,8 +47,11 @@ class HomePage extends StatelessWidget {
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.indigo,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20), // Top-left corner
+                                  bottomLeft: Radius.circular(20), // Bottom-left corner
+                                ),
                               ),
                             ),
                             child: const Text("Shows",
@@ -59,8 +62,11 @@ class HomePage extends StatelessWidget {
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20), // Top-left corner
+                                  bottomRight: Radius.circular(20), // Bottom-left corner
+                                ),
                               ),
                             ),
                             child: const Text("Anime",
@@ -83,6 +89,44 @@ class HomePage extends StatelessWidget {
             HorizontalCardList(),
 
             const SectionTitle(title: "Les nouveautés"),
+            HorizontalCardList(),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end, // Aligns everything to the left
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                        ),
+                      ),
+                    ),
+                    child: const Text("Today",
+                        style: TextStyle(color: Colors.white)
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                    ),
+                    child: const Text("Yesrday",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(width: 16),
+                ],
+              ),
             HorizontalCardList(),
 
             const SectionTitle(title: "Random"),
@@ -152,7 +196,7 @@ class HorizontalCardList extends StatelessWidget {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(16),
                 image: const DecorationImage(
-                  image: AssetImage('assets/sample_poster.jpg'), // Replace with your asset path
+                  image: AssetImage('assets/sample_poster.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
