@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cinelist/widgets/bottom_nav_bar.dart'; // Import the BottomNavBar widget
+import 'package:cinelist/widgets/bottom_nav_bar.dart';
+import 'package:cinelist/ui/detail_page.dart';
 
 
 class SearchPage extends StatelessWidget {
@@ -8,44 +9,66 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFF6F61), // Coral background
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFF6F61),
-        elevation: 0,
-        title: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Search...",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
+      backgroundColor: const Color(0xFFFF6F61),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: const Color(0xFFFF6F61),
+            elevation: 0,
+            title: Row(
+              children: [
+                const Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 40.5), // No padding inside TextField
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Search...",
+                      border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(64),
+                          bottomRight: Radius.circular(64),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 10),
+                IconButton(
+                  icon: const Icon(Icons.search, color: Colors.indigo),
+                  onPressed: () {
+                    // Handle search action
+                  },
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            IconButton(
-              icon: const Icon(Icons.search, color: Colors.white),
-              onPressed: () {
-                // Handle search action
-              },
-            ),
-          ],
+          ),
         ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: 10, // Replace with the number of items in your data
+        itemCount: 5,
         itemBuilder: (context, index) {
-          return FilmCard();
-        },
+          return GestureDetector(
+            onTap: () {
+              // Navigate to the MovieDetailPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (
+                      context) => const MovieDetailPage(), // Replace with actual movie data
+                ),
+              );
+            },
+            child: const FilmCard(),
+          );
+        }
       ),
-      bottomNavigationBar: const BottomNavBar(), // Add the bottom navigation bar
+      bottomNavigationBar: const BottomNavBar(currentRoute: '/search'), // Add the bottom navigation bar
     );
   }
 }
@@ -77,10 +100,10 @@ class FilmCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   "FILMS 1",
                   style: TextStyle(
