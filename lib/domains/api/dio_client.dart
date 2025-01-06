@@ -7,11 +7,10 @@ class DioClient {
         baseUrl: "https://api.simkl.com/",
         contentType: "application/json",
         headers: {
-          "Authorization": "6103e09af69da6887c2e4dbd8bc2b61a0d691ec11ac9dd2a143c05a120c9b8e3", // Replace with actual key
+          //"Authorization": "c73b230b69f7eebda2a1b171f2a65a3ff0b0c7173d6574c04681b24996440069",
         },
       ),
     );
-    // Optional: Add interceptors for logging or error handling
     dio.interceptors.add(LogInterceptor(responseBody:
     true, requestHeader: true ,requestBody: true));
 

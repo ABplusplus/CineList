@@ -3,24 +3,24 @@ import 'ratings.dart';
 
 part 'top_aired_fanart.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TopAiredFanart {
   final String title;
   final int rank;
   final String art;
-  final Ratings ratings;
+  //final Ratings ratings;
   @JsonKey(name: "episode_title")
   final String episodeTitle;
-  final String season;
+  //final String season;
   final String episode;
 
   TopAiredFanart({
     required this.title,
     required this.rank,
     required this.art,
-    required this.ratings,
+    //required this.ratings,
     required this.episodeTitle,
-    required this.season,
+    //required this.season,
     required this.episode,
   });
 

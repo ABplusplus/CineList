@@ -24,9 +24,11 @@ TVs _$TVsFromJson(Map<String, dynamic> json) => TVs(
     );
 
 Map<String, dynamic> _$TVsToJson(TVs instance) => <String, dynamic>{
-      'top_aired_fanarts': instance.topAiredFanarts,
-      'new_episodes': instance.newEpisodes,
-      'most_watched_this_month': instance.mostWatchedThisMonth,
-      'top_last_aired': instance.topLastAired,
-      'premieres': instance.premieres,
+      'top_aired_fanarts':
+          instance.topAiredFanarts.map((e) => e.toJson()).toList(),
+      'new_episodes': instance.newEpisodes.toJson(),
+      'most_watched_this_month':
+          instance.mostWatchedThisMonth.map((e) => e.toJson()).toList(),
+      'top_last_aired': instance.topLastAired.map((e) => e.toJson()).toList(),
+      'premieres': instance.premieres.map((e) => e.toJson()).toList(),
     };

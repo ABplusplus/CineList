@@ -6,6 +6,7 @@ part 'items.g.dart';
 @JsonSerializable()
 class Items {
   final List<Episode> all;
+  @JsonKey(name: "new")
   final List<Episode> newEpisodes;
 
   Items({

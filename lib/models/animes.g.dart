@@ -7,11 +7,11 @@ part of 'animes.dart';
 // **************************************************************************
 
 Animes _$AnimesFromJson(Map<String, dynamic> json) => Animes(
-      animeList: (json['animes'] as List<dynamic>)
-          .map((e) => TVs.fromJson(e as Map<String, dynamic>))
+      animeList: (json['top_aired_fanarts'] as List<dynamic>)
+          .map((e) => TopAiredFanart.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$AnimesToJson(Animes instance) => <String, dynamic>{
-      'animes': instance.animeList,
+      'top_aired_fanarts': instance.animeList,
     };

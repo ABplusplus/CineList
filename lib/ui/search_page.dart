@@ -1,10 +1,12 @@
+import 'package:cinelist/repositories/anime_repository.dart';
+import 'package:cinelist/repositories/series_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:cinelist/widgets/bottom_nav_bar.dart';
 import 'package:cinelist/ui/detail_page.dart';
 
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({Key? key, required AnimeRepository animeRepository, required SeriesRepository seriesRepository,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

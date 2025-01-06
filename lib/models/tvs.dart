@@ -6,7 +6,7 @@ import 'tv_item_with_date.dart';
 
 part 'tvs.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TVs {
   @JsonKey(name: "top_aired_fanarts")
   final List<TopAiredFanart> topAiredFanarts;
