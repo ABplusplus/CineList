@@ -1,27 +1,16 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'airs.g.dart';
+
+@JsonSerializable()
 class Airs {
   final String day;
   final String time;
   final String timezone;
 
-  Airs({
-    required this.day,
-    required this.time,
-    required this.timezone,
-  });
+  Airs({required this.day, required this.time, required this.timezone});
 
-  factory Airs.fromJson(Map<String, dynamic> json) {
-    return Airs(
-      day: json['day'] ?? '',
-      time: json['time'] ?? '',
-      timezone: json['timezone'] ?? '',
-    );
-  }
+  factory Airs.fromJson(Map<String, dynamic> json) => _$AirsFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'day': day,
-      'time': time,
-      'timezone': timezone,
-    };
-  }
+  Map<String, dynamic> toJson() => _$AirsToJson(this);
 }

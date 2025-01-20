@@ -1,27 +1,17 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'episode_item.g.dart';
+
+@JsonSerializable()
 class EpisodeItem {
-  final int number;
   final String title;
+  final int episode;
   final String airDate;
+  final String poster;
 
-  EpisodeItem({
-    required this.number,
-    required this.title,
-    required this.airDate,
-  });
+  EpisodeItem({required this.title, required this.episode, required this.airDate, required this.poster});
 
-  factory EpisodeItem.fromJson(Map<String, dynamic> json) {
-    return EpisodeItem(
-      number: json['number'] ?? 0,
-      title: json['title'] ?? '',
-      airDate: json['airDate'] ?? '',
-    );
-  }
+  factory EpisodeItem.fromJson(Map<String, dynamic> json) => _$EpisodeItemFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'number': number,
-      'title': title,
-      'airDate': airDate,
-    };
-  }
+  Map<String, dynamic> toJson() => _$EpisodeItemToJson(this);
 }
