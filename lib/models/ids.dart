@@ -5,11 +5,11 @@ part 'ids.g.dart';
 @JsonSerializable()
 class Ids {
   final int simkl;
-  final String slug;
+  //final String slug;
 
   Ids({
     required this.simkl,
-    required this.slug,
+    //required this.slug,
   });
 
   factory Ids.fromJson(Map<String, dynamic> json) => _$IdsFromJson(json);

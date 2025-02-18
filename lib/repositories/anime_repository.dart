@@ -1,5 +1,5 @@
 import 'package:cinelist/domains/api/cinelist_api_service.dart';
-import 'package:cinelist/models/animes.dart';
+import 'package:cinelist/models/tvs.dart';
 
 import '../models/top_aired_fanart.dart';
 //import '../../models/top_aired_fanart.dart';
@@ -10,7 +10,7 @@ class AnimeRepository {
 
   AnimeRepository({required this.apiClient});
 
-  Future<Animes> fetchAnime() async {
+  Future<TVs> fetchAnime() async {
     try {
       return await apiClient.getTrendingAnime();
     } catch (e) {
@@ -18,7 +18,7 @@ class AnimeRepository {
     }
   }
 
-  Future<Animes> fetchAnimeDetails(String id) async {
+  Future<TVs> fetchAnimeDetails(String id) async {
     try {
       return await apiClient.getAnimeDetails(id);
     } catch (e) {
@@ -28,7 +28,7 @@ class AnimeRepository {
 
 
 
-  Future<Animes> fetchTrendingAnime() async {
+  Future<TVs> fetchTrendingAnime() async {
     try {
       final result = await apiClient.getTrendingAnime();
       return result;

@@ -1,4 +1,3 @@
-import 'package:cinelist/models/animes.dart';
 import 'package:cinelist/models/tvs.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -12,18 +11,21 @@ part 'cinelist_api_service.g.dart';
 abstract class CinelistApiService {
   factory CinelistApiService(Dio dio, {String baseUrl}) = _CinelistApiService;
 
-
   @GET("/anime")
-  Future<Animes> getTrendingAnime();
+  Future<TVs> getTrendingAnime();
 
   @GET("/anime/{id}")
-  Future<Animes> getAnimeDetails(@Path("id") String id);
+  Future<TVs> getAnimeDetails(@Path("id") String id);
 
   @GET("/tv")
-  Future<TVs> getTrendingSeries();
+  Future<TVs> getAllSeries();
 
   @GET("/tv/{id}")
   Future<TVs> getSeriesDetails(@Path("id") String id);
+
+  @GET("/tv/trending")
+  Future<TVs> getTrendingSeries();
+
   //Liste
 
 

@@ -8,10 +8,8 @@ part of 'ids.dart';
 
 Ids _$IdsFromJson(Map<String, dynamic> json) => Ids(
       simkl: (json['simkl'] as num).toInt(),
-      slug: json['slug'] as String,
     );
 
 Map<String, dynamic> _$IdsToJson(Ids instance) => <String, dynamic>{
       'simkl': instance.simkl,
-      'slug': instance.slug,
     };

@@ -1,4 +1,5 @@
 import 'package:cinelist/models/new_episodes.dart';
+import 'package:cinelist/models/tv_item_with_date.dart';
 import 'package:flutter/material.dart';
 import 'package:cinelist/repositories/anime_repository.dart';
 import 'package:cinelist/repositories/series_repository.dart';
@@ -9,7 +10,10 @@ import 'package:cinelist/models/tv_item.dart';
 import 'package:cinelist/widgets/bottom_nav_bar.dart';
 import 'package:cinelist/ui/detail_page.dart';
 
+import '../models/items.dart';
+import '../models/today.dart';
 import '../models/tv_item.dart';
+import '../models/yesterday.dart';
 
 class HomePage extends StatefulWidget {
   final AnimeRepository animeRepository;
@@ -28,8 +32,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<TopAiredFanart> trendingAnime = [];
   List<TvItem> mostWatchedThisMonth = [];
-  List<TvItem>premieres = [];
+  List<TvItem> premieres = [];
+  List<TvItemWithDate> topLastAired = [];
   NewEpisodes? newEpisodes;
+  //TrendingAnime? trendingAnime;
 
 
   bool isLoading = true;
@@ -39,23 +45,24 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     fetchSeries();
     fetchPremieres();
-    // fetchNewEpisodes();
+    fetchTopLastAired();
+    //fetchNewEpisodes();
   }
 
-  Future<void> fetchTrendingAnime() async {
-    try {
-      final anime = await widget.animeRepository.fetchTrendingAnime();
-      setState(() {
-        trendingAnime = anime.animeList;
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching anime: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  // Future<void> fetchTrendingAnime() async {
+  //   try {
+  //     final anime = await widget.animeRepository.fetchTrendingAnime();
+  //     setState(() {
+  //       trendingAnime = anime.;
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching anime: $e");
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   Future<void> fetchSeries() async {
     try {
@@ -87,13 +94,31 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> fetchTopLastAired() async {
+    try {
+      final series = await widget.seriesRepository.fetchTopLastAired();
+      setState(() {
+        topLastAired = series.topLastAired ?? [];
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching series: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   // Future<void> fetchNewEpisodes() async {
   //   try {
   //     final series = await widget.seriesRepository.fetchSeries();
-  //     setState(() {
-  //       newEpisodes = series.newEpisodes;
-  //       isLoading = false;
-  //     });
+  //     if (newEpisodes?.today.items.all != null) {
+  //       setState(() {
+  //           newEpisodes = series.newEpisodes;
+  //           isLoading = false;
+  //         }
+  //       );
+  //     }
   //   } catch (e) {
   //     print("Error fetching new episodes: $e");
   //     setState(() {
@@ -125,14 +150,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Positioned(
-                  top: 16,
-                  left: 25,
+                  top: MediaQuery.of(context).size.height * 0.02, // 2% from the top
+                  left: MediaQuery.of(context).size.width * 0.05, // 5% from the left
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16), // Add border radius
                     child: Image.asset(
                       'assets/hunter_x_hunter.jpg',
-                      width: 450,
-                      height: 220,
+                      width: MediaQuery.of(context).size.width * 0.9, // 90% of the screen width
+                      height: MediaQuery.of(context).size.height * 0.25, // 25% of the screen height
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -212,47 +237,47 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle "Today" button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    "Today",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle "Yesterday" button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    "Yesterday",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+                // const SizedBox(width: 16),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     // Handle "Today" button press
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.indigo,
+                //     shape: const RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.only(
+                //         topLeft: Radius.circular(20),
+                //         bottomLeft: Radius.circular(20),
+                //       ),
+                //     ),
+                //   ),
+                //   child: const Text(
+                //     "Today",
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                // ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     // Handle "Yesterday" button press
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.red,
+                //     shape: const RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.only(
+                //         topRight: Radius.circular(20),
+                //         bottomRight: Radius.circular(20),
+                //       ),
+                //     ),
+                //   ),
+                //   child: const Text(
+                //     "Yesterday",
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 8),
-            HorizontalCardList(items: mostWatchedThisMonth),
+            HorizontalCardList3(items: topLastAired),
           ],
         ),
       ),
@@ -281,7 +306,7 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-// Horizontal Card List Widget
+
 class HorizontalCardList extends StatelessWidget {
   final List<TvItem> items;
 
@@ -327,11 +352,55 @@ class HorizontalCardList extends StatelessWidget {
   }
 }
 
-
 class HorizontalCardList2 extends StatelessWidget {
   final List<Episode> items;
 
   const HorizontalCardList2({Key? key, required this.items}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 160,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return GestureDetector(
+            onTap: () {
+              // Navigate to the MovieDetailPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MovieDetailPage(), // Replace with actual movie data
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16),
+                  image: DecorationImage(
+                    image: NetworkImage("https://simkl.in/posters/${item.poster}_ca.webp"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class HorizontalCardList3 extends StatelessWidget {
+  final List<TvItemWithDate> items;
+
+  const HorizontalCardList3({Key? key, required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

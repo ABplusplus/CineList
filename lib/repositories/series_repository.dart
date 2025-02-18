@@ -1,8 +1,8 @@
 import 'package:cinelist/domains/api/cinelist_api_service.dart';
-import 'package:cinelist/models/animes.dart';
 import 'package:dio/dio.dart';
 import 'package:cinelist/domains/api/dio_client.dart';
 
+import '../models/tv_item_with_date.dart';
 import '../models/tvs.dart';
 
 class SeriesRepository {
@@ -12,7 +12,7 @@ class SeriesRepository {
 
   Future<TVs> fetchSeries() async {
     try {
-      return await apiClient.getTrendingSeries();
+      return await apiClient.getAllSeries();
     } catch (e) {
       throw Exception("Failed to fetch series: $e");
     }
@@ -25,4 +25,13 @@ class SeriesRepository {
       throw Exception("Failed to fetch series details: $e");
     }
   }
+
+  Future<TVs> fetchTopLastAired() async {
+    try {
+      return await apiClient.getTrendingSeries();
+    } catch (e) {
+      throw Exception("Failed to fetch animes: $e");
+    }
+  }
+
 }
