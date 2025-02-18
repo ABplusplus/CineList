@@ -26,13 +26,6 @@ abstract class CinelistApiService {
   @GET("/tv/trending")
   Future<TVs> getTrendingSeries();
 
-  //Liste
-
-
-  /*
-  @GET("/search/all")
-  Future<List<SearchResultModel>> searchAnimeOrSeries(@Query("q") String query);
-  */
 
   }
 
