@@ -1,4 +1,4 @@
-import 'package:cinelist/repositories/anime_repository.dart';
+
 import 'package:cinelist/repositories/series_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:cinelist/widgets/bottom_nav_bar.dart';
@@ -8,12 +8,11 @@ import 'package:cinelist/models/tv_item_with_date.dart';
 import 'package:cinelist/models/tvs.dart';
 
 class SearchPage extends StatefulWidget {
-  final AnimeRepository animeRepository;
   final SeriesRepository seriesRepository;
 
   const SearchPage({
     Key? key,
-    required this.animeRepository,
+
     required this.seriesRepository,
   }) : super(key: key);
 
@@ -24,36 +23,51 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> searchResults = [];
+  List<dynamic> filteredResults = [];
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     fetchSearchResults();
+
+    // Écoute les changements dans le champ de recherche
+    _searchController.addListener(() {
+      filterSearchResults();
+    });
   }
 
-  Future<void> fetchSearchResults({String query = ''}) async {
+  /// Récupère les résultats des séries et des animés
+  Future<void> fetchSearchResults() async {
     setState(() => isLoading = true);
     try {
-      final TVs tvs = await widget.seriesRepository.fetchSeries();
-      List<dynamic> combinedList = [
-        ...tvs.mostWatchedThisMonth,
-        ...tvs.premieres,
-        ...tvs.topLastAired
+      final TVs series = await widget.seriesRepository.fetchSeries();
+      final TVs anime = await widget.seriesRepository.fetchAnime();
+
+      Set<String> uniqueTitles = {};
+
+      List<TvItem> tvItems = [
+        ...series.mostWatchedThisMonth,
+        ...series.premieres,
+        ...anime.mostWatchedThisMonth,
+        ...anime.premieres,
+      ].cast<TvItem>();
+
+      List<TvItemWithDate> tvItemsWithDate = [
+        ...series.topLastAired,
+        ...anime.topLastAired,
+      ].cast<TvItemWithDate>();
+
+      List<dynamic> combinedResults = [
+        ...tvItems.where((item) => uniqueTitles.add(item.title)),
+        ...tvItemsWithDate.where((item) => uniqueTitles.add(item.title)),
       ];
 
-      // Filtrage par titre si une requête est fournie
-      if (query.isNotEmpty) {
-        combinedList = combinedList.where((item) {
-          return item.title.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-      }
-
-      // Tri alphabétique
-      combinedList.sort((a, b) => a.title.compareTo(b.title));
+      combinedResults.sort((a, b) => a.title.compareTo(b.title));
 
       setState(() {
-        searchResults = combinedList;
+        searchResults = combinedResults;
+        filteredResults = combinedResults; // Initialise les résultats filtrés
         isLoading = false;
       });
     } catch (e) {
@@ -62,6 +76,15 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  /// Filtre les résultats en fonction de l'entrée utilisateur
+  void filterSearchResults() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      filteredResults = searchResults
+          .where((item) => item.title.toLowerCase().contains(query))
+          .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +115,6 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       prefixIcon: const Icon(Icons.search, color: Colors.indigo),
                     ),
-                    onChanged: (query) => fetchSearchResults(query: query),  // Ajout ici
                   ),
                 ),
               ],
@@ -102,11 +124,13 @@ class _SearchPageState extends State<SearchPage> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
+          : filteredResults.isEmpty
+          ? const Center(child: Text("No results found"))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: searchResults.length,
+        itemCount: filteredResults.length,
         itemBuilder: (context, index) {
-          final item = searchResults[index];
+          final item = filteredResults[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
@@ -133,7 +157,7 @@ class FilmCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String title = item.title;
-    String description = item is TvItemWithDate ? item.bottomText : "More info";  // Correction ici
+    String description = item is TvItemWithDate ? item.bottomText : "More info";
     String posterUrl = "https://simkl.in/posters/${item.poster}_ca.webp";
 
     return Container(

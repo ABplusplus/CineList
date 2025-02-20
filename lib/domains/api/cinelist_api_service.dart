@@ -11,12 +11,6 @@ part 'cinelist_api_service.g.dart';
 abstract class CinelistApiService {
   factory CinelistApiService(Dio dio, {String baseUrl}) = _CinelistApiService;
 
-  @GET("/anime")
-  Future<TVs> getTrendingAnime();
-
-  @GET("/anime/{id}")
-  Future<TVs> getAnimeDetails(@Path("id") String id);
-
   @GET("/tv")
   Future<TVs> getAllSeries();
 
@@ -26,6 +20,8 @@ abstract class CinelistApiService {
   @GET("/tv/trending")
   Future<TVs> getTrendingSeries();
 
+  @GET("/anime")
+  Future<TVs> getAllAnime();
 
   }
 

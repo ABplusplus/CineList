@@ -18,6 +18,15 @@ class SeriesRepository {
     }
   }
 
+  // Fetch Anime (Ajouté)
+  Future<TVs> fetchAnime() async {
+    try {
+      return await apiClient.getAllAnime();
+    } catch (e) {
+      throw Exception("Failed to fetch animes: $e");
+    }
+  }
+
   Future<TVs> fetchSeriesDetails(String id) async {
     try {
       return await apiClient.getSeriesDetails(id);
