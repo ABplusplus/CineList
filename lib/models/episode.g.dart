@@ -7,21 +7,23 @@ part of 'episode.dart';
 // **************************************************************************
 
 Episode _$EpisodeFromJson(Map<String, dynamic> json) => Episode(
-      title: json['title'] as String,
+      title: json['title'] as String?,
       rank: (json['rank'] as num?)?.toInt(),
-      airTime: json['airTime'] as String?,
-      network: json['network'] as String,
-      poster: json['poster'] as String,
-      season: (json['season'] as num).toInt(),
-      episode: (json['episode'] as num).toInt(),
-      watched: (json['watched'] as num).toInt(),
-      ids: Ids.fromJson(json['ids'] as Map<String, dynamic>),
+      airTime: json['air_time'] as String?,
+      network: json['network'] as String?,
+      poster: json['poster'] as String?,
+      season: (json['season'] as num?)?.toInt(),
+      episode: (json['episode'] as num?)?.toInt(),
+      watched: (json['watched'] as num?)?.toInt(),
+      ids: json['ids'] == null
+          ? null
+          : Ids.fromJson(json['ids'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$EpisodeToJson(Episode instance) => <String, dynamic>{
       'title': instance.title,
       'rank': instance.rank,
-      'airTime': instance.airTime,
+      'air_time': instance.airTime,
       'network': instance.network,
       'poster': instance.poster,
       'season': instance.season,

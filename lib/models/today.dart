@@ -8,15 +8,21 @@ class Today {
   @JsonKey(name: "day_ts")
   final int dayTs;
   final String timezone;
-  final Items items;
+  @JsonKey(fromJson: _itemsFromJson)
+  final Items? items;
 
   Today({
     required this.dayTs,
     required this.timezone,
-    required this.items,
+    this.items,
   });
 
-  factory Today.fromJson(Map<String, dynamic> json) => _$TodayFromJson(json);
+  static Items _itemsFromJson(dynamic json) {
+    if (json == null) return const Items(all: [], newEpisodes: []);
+    return Items.fromJson(json as Map<String, dynamic>);
+  }
 
+  factory Today.fromJson(Map<String, dynamic> json) =>
+      _$TodayFromJson(json);
   Map<String, dynamic> toJson() => _$TodayToJson(this);
 }

@@ -30,13 +30,14 @@ class _HomePageState extends State<HomePage> {
   List<TvItem> mostWatchedThisMonth = [];
   List<TvItem> premieres = [];
   List<TvItemWithDate> topLastAired = [];
+  List<Episode> newEpisodes = [];
   bool isLoading = true;
-  bool isAnimeSelected = false; // Ajout du booléen pour l'alternance
+  bool isAnimeSelected = false;
 
   @override
   void initState() {
     super.initState();
-    fetchSeries(); // Chargement par défaut des séries
+    fetchSeries();
   }
 
   Future<void> fetchSeries() async {
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
     try {
       final series = await widget.seriesRepository.fetchSeries();
       setState(() {
+        newEpisodes = series.newEpisodes.today?.items?.all ?? [];
         mostWatchedThisMonth = series.mostWatchedThisMonth ?? [];
         premieres = series.premieres ?? [];
         topLastAired = series.topLastAired ?? [];
@@ -60,6 +62,7 @@ class _HomePageState extends State<HomePage> {
     try {
       final anime = await widget.seriesRepository.fetchAnime();
       setState(() {
+        newEpisodes = anime.newEpisodes.today?.items?.all ?? [];
         mostWatchedThisMonth = anime.mostWatchedThisMonth ?? [];
         premieres = anime.premieres ?? [];
         topLastAired = anime.topLastAired ?? [];
@@ -161,10 +164,10 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 16),
 
-            const SectionTitle(title: "Trending"),
+            const SectionTitle(title: "Nouveaux épisodes"),
             isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : HorizontalCardList(items: mostWatchedThisMonth),
+                : HorizontalEpisodeCardList(items: newEpisodes),
 
             const SectionTitle(title: "Les plus vus"),
             HorizontalCardList(items: mostWatchedThisMonth),
@@ -201,6 +204,56 @@ class SectionTitle extends StatelessWidget {
     );
   }
 }
+
+// Widget pour afficher horizontalement une liste d'épisodes
+class HorizontalEpisodeCardList extends StatelessWidget {
+  final List<Episode> items;
+
+  const HorizontalEpisodeCardList({Key? key, required this.items})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 160,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final episode = items[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MovieDetailPage(),
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16),
+                  image: episode.poster != null
+                      ? DecorationImage(
+                    image: NetworkImage(
+                        "https://simkl.in/posters/${episode.poster}_ca.webp"),
+                    fit: BoxFit.cover,
+                  )
+                      : null,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 
 // Listes d'éléments
 class HorizontalCardList extends StatelessWidget {

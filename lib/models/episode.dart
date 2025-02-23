@@ -5,26 +5,27 @@ part 'episode.g.dart';
 
 @JsonSerializable()
 class Episode {
-  final String title;
+  final String? title;
   final int? rank;
+  @JsonKey(name: "air_time")
   final String? airTime;
-  final String network;
-  final String poster;
-  final int season;
-  final int episode;
-  final int watched;
-  final Ids ids;
+  final String? network;
+  final String? poster;
+  final int? season;
+  final int? episode;
+  final int? watched;
+  final Ids? ids;
 
   Episode({
-    required this.title,
+    this.title,
     this.rank,
     this.airTime,
-    required this.network,
-    required this.poster,
-    required this.season,
-    required this.episode,
-    required this.watched,
-    required this.ids,
+    this.network,
+    this.poster,
+    this.season,
+    this.episode,
+    this.watched,
+    this.ids,
   });
 
   factory Episode.fromJson(Map<String, dynamic> json) => _$EpisodeFromJson(json);

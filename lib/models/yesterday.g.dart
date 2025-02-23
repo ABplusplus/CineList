@@ -9,7 +9,7 @@ part of 'yesterday.dart';
 Yesterday _$YesterdayFromJson(Map<String, dynamic> json) => Yesterday(
       dayTs: (json['day_ts'] as num).toInt(),
       timezone: json['timezone'] as String,
-      items: Items.fromJson(json['items'] as Map<String, dynamic>),
+      items: Yesterday._itemsFromJson(json['items']),
     );
 
 Map<String, dynamic> _$YesterdayToJson(Yesterday instance) => <String, dynamic>{

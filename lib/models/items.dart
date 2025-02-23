@@ -3,15 +3,23 @@ import 'episode.dart';
 
 part 'items.g.dart';
 
+List<Episode> _episodeListFromJson(dynamic json) {
+  if (json == null) return <Episode>[];
+  return (json as List)
+      .map((e) => Episode.fromJson(e as Map<String, dynamic>))
+      .toList();
+}
+
 @JsonSerializable()
 class Items {
-  final List<Episode> all;
-  @JsonKey(name: "new")
-  final List<Episode> newEpisodes;
+  @JsonKey(defaultValue: const [], fromJson: _episodeListFromJson)
+  final List<Episode>? all;
+  @JsonKey(name: "new", defaultValue: const [], fromJson: _episodeListFromJson)
+  final List<Episode>? newEpisodes;
 
-  Items({
-    required this.all,
-    required this.newEpisodes,
+  const Items({
+    this.all,
+    this.newEpisodes,
   });
 
   factory Items.fromJson(Map<String, dynamic> json) => _$ItemsFromJson(json);

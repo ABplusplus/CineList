@@ -7,12 +7,8 @@ part of 'items.dart';
 // **************************************************************************
 
 Items _$ItemsFromJson(Map<String, dynamic> json) => Items(
-      all: (json['all'] as List<dynamic>)
-          .map((e) => Episode.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      newEpisodes: (json['new'] as List<dynamic>)
-          .map((e) => Episode.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      all: json['all'] == null ? [] : _episodeListFromJson(json['all']),
+      newEpisodes: json['new'] == null ? [] : _episodeListFromJson(json['new']),
     );
 
 Map<String, dynamic> _$ItemsToJson(Items instance) => <String, dynamic>{

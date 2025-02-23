@@ -6,12 +6,15 @@ part 'new_episodes.g.dart';
 
 @JsonSerializable()
 class NewEpisodes {
-  final Today today;
-  final Yesterday yesterday;
+  final Today? today;
+  final Yesterday? yesterday;
+  @JsonKey(name: "2days")
+  final Today? twoDays;
 
   NewEpisodes({
-    required this.today,
-    required this.yesterday,
+    this.today,
+    this.yesterday,
+    this.twoDays,
   });
 
   factory NewEpisodes.fromJson(Map<String, dynamic> json) =>
