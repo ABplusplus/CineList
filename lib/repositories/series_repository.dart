@@ -1,4 +1,6 @@
 import 'package:cinelist/domains/api/cinelist_api_service.dart';
+import 'package:cinelist/models/with_id/episode_item.dart';
+import 'package:cinelist/models/with_id/item_by_id.dart';
 import 'package:dio/dio.dart';
 import 'package:cinelist/domains/api/dio_client.dart';
 
@@ -27,11 +29,19 @@ class SeriesRepository {
     }
   }
 
-  Future<TVs> fetchSeriesDetails(String id) async {
+  Future<ItemById> fetchSeriesDetails(String id) async {
     try {
       return await apiClient.getSeriesDetails(id);
     } catch (e) {
       throw Exception("Failed to fetch series details: $e");
+    }
+  }
+
+  Future<List<EpisodeItem>> fetchEpisodesByTVId(String id) async {
+    try {
+      return await apiClient.getEpisodesByTVId(id);
+    } catch (e) {
+      throw Exception("Failed to fetch episodes for TV id $id: $e");
     }
   }
 

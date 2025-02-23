@@ -57,12 +57,15 @@ class _CinelistApiService implements CinelistApiService {
   }
 
   @override
-  Future<TVs> getSeriesDetails(String id) async {
+  Future<ItemById> getSeriesDetails(
+    String id, [
+    String extended = "full",
+  ]) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'extended': extended};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<TVs>(Options(
+    final _options = _setStreamType<ItemById>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -79,9 +82,44 @@ class _CinelistApiService implements CinelistApiService {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late TVs _value;
+    late ItemById _value;
     try {
-      _value = TVs.fromJson(_result.data!);
+      _value = ItemById.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<List<EpisodeItem>> getEpisodesByTVId(String id) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<EpisodeItem>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/tv/episodes/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<EpisodeItem> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => EpisodeItem.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

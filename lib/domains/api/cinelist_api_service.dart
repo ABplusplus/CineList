@@ -1,4 +1,7 @@
 import 'package:cinelist/models/tvs.dart';
+import 'package:cinelist/models/with_id/item_by_id.dart';
+import 'package:cinelist/models/with_id/episode_item.dart';
+
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 //import '../models/top_aired_fanart_model.dart';
@@ -15,7 +18,15 @@ abstract class CinelistApiService {
   Future<TVs> getAllSeries();
 
   @GET("/tv/{id}")
-  Future<TVs> getSeriesDetails(@Path("id") String id);
+  Future<ItemById> getSeriesDetails(
+      @Path("id") String id, [
+        @Query("extended") String extended = "full",
+      ]);
+
+  @GET("/tv/episodes/{id}")
+  Future<List<EpisodeItem>> getEpisodesByTVId(
+      @Path("id") String id,
+      );
 
   @GET("/tv/trending")
   Future<TVs> getTrendingSeries();
