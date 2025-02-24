@@ -1,20 +1,14 @@
-import 'package:cinelist/models/new_episodes.dart';
-import 'package:cinelist/models/tv_item_with_date.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:cinelist/repositories/series_repository.dart';
-import 'package:cinelist/models/top_aired_fanart.dart';
-import 'package:cinelist/models/tvs.dart';
-import 'package:cinelist/models/episode.dart';
-import 'package:cinelist/models/tv_item.dart';
 import 'package:cinelist/widgets/bottom_nav_bar.dart';
 import 'package:cinelist/ui/detail_page.dart';
+import 'package:cinelist/ui/notifiers/home_notifier.dart';
+import 'package:cinelist/models/tv_item.dart';
+import 'package:cinelist/models/tv_item_with_date.dart';
+import 'package:cinelist/models/episode.dart';
 
-import '../models/items.dart';
-import '../models/today.dart';
-import '../models/tv_item.dart';
-import '../models/yesterday.dart';
-
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   final SeriesRepository seriesRepository;
 
   const HomePage({
@@ -23,161 +17,102 @@ class HomePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  List<TvItem> mostWatchedThisMonth = [];
-  List<TvItem> premieres = [];
-  List<TvItemWithDate> topLastAired = [];
-  List<Episode> newEpisodes = [];
-  bool isLoading = true;
-  bool isAnimeSelected = false;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchSeries();
-  }
-
-  Future<void> fetchSeries() async {
-    setState(() => isLoading = true);
-    try {
-      final series = await widget.seriesRepository.fetchSeries();
-      setState(() {
-        newEpisodes = series.newEpisodes.today?.items?.all ?? [];
-        mostWatchedThisMonth = series.mostWatchedThisMonth ?? [];
-        premieres = series.premieres ?? [];
-        topLastAired = series.topLastAired ?? [];
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching series: $e");
-      setState(() => isLoading = false);
-    }
-  }
-
-  Future<void> fetchAnime() async {
-    setState(() => isLoading = true);
-    try {
-      final anime = await widget.seriesRepository.fetchAnime();
-      setState(() {
-        newEpisodes = anime.newEpisodes.today?.items?.all ?? [];
-        mostWatchedThisMonth = anime.mostWatchedThisMonth ?? [];
-        premieres = anime.premieres ?? [];
-        topLastAired = anime.topLastAired ?? [];
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching anime: $e");
-      setState(() => isLoading = false);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: const BottomNavBar(currentRoute: '/'),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hero Section
-            Stack(
-              children: [
-                Container(
-                  height: 240,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFF6F61), // Coral background
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(32),
-                      bottomRight: Radius.circular(32),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.height * 0.02, // 2% du haut
-                  left: MediaQuery.of(context).size.width * 0.05, // 5% de la largeur
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16), // Ajout d'un arrondi
-                    child: Image.asset(
-                      'assets/hunter_x_hunter.jpg',
-                      width: MediaQuery.of(context).size.width * 0.9, // 90% de la largeur
-                      height: MediaQuery.of(context).size.height * 0.25, // 25% de la hauteur
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Boutons "Shows" et "Anime"
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (isAnimeSelected) {
-                      setState(() {
-                        isAnimeSelected = false;
-                        fetchSeries();
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isAnimeSelected ? Colors.grey : Colors.indigo,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
+    return ChangeNotifierProvider(
+      create: (context) => HomeNotifier(seriesRepository: seriesRepository)..fetchSeries(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        bottomNavigationBar: const BottomNavBar(currentRoute: '/'),
+        body: Consumer<HomeNotifier>(
+          builder: (context, homeNotifier, child) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Hero Section
+                  Stack(
+                    children: [
+                      Container(
+                        height: 240,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFF6F61), // Coral background
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(32),
+                            bottomRight: Radius.circular(32),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  child: const Text("Shows", style: TextStyle(color: Colors.white)),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (!isAnimeSelected) {
-                      setState(() {
-                        isAnimeSelected = true;
-                        fetchAnime();
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isAnimeSelected ? Colors.red : Colors.grey,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
+                      Positioned(
+                        top: MediaQuery.of(context).size.height * 0.02, // 2% from the top
+                        left: MediaQuery.of(context).size.width * 0.05, // 5% from the left
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16), // Add border radius
+                          child: Image.asset(
+                            'assets/hunter_x_hunter.jpg',
+                            width: MediaQuery.of(context).size.width * 0.9, // 90% of the screen width
+                            height: MediaQuery.of(context).size.height * 0.25, // 25% of the screen height
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  child: const Text("Anime", style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 16),
-              ],
-            ),
 
-            const SizedBox(height: 16),
+                  const SizedBox(height: 24),
 
-            const SectionTitle(title: "Nouveaux épisodes"),
-            isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : HorizontalEpisodeCardList(items: newEpisodes),
+                  // Buttons for "Shows" and "Anime"
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => homeNotifier.toggleCategory(false),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: homeNotifier.isAnimeSelected ? Colors.grey : Colors.indigo,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              bottomLeft: Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                        child: const Text("Shows", style: TextStyle(color: Colors.white)),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => homeNotifier.toggleCategory(true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: homeNotifier.isAnimeSelected ? Colors.red : Colors.grey,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                        child: const Text("Anime", style: TextStyle(color: Colors.white)),
+                      ),
+                      const SizedBox(width: 16),
+                    ],
+                  ),
 
-            const SectionTitle(title: "Les plus vus"),
-            HorizontalCardList(items: mostWatchedThisMonth),
+                  const SizedBox(height: 16),
 
-            const SectionTitle(title: "Les premières"),
-            HorizontalCardList(items: premieres),
+                  const SectionTitle(title: "Nouveaux épisodes"),
+                  homeNotifier.isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : HorizontalEpisodeCardList(items: homeNotifier.newEpisodes),
 
-            const SectionTitle(title: "Les nouveautés"),
-            HorizontalCardList3(items: topLastAired),
-          ],
+                  const SectionTitle(title: "Les plus vus"),
+                  HorizontalCardList(items: homeNotifier.mostWatchedThisMonth),
+
+                  const SectionTitle(title: "Les premières"),
+                  HorizontalCardList(items: homeNotifier.premieres),
+
+                  const SectionTitle(title: "Les nouveautés"),
+                  HorizontalCardList3(items: homeNotifier.topLastAired),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
