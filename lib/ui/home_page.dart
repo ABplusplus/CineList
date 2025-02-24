@@ -163,7 +163,6 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-// Widget pour afficher horizontalement une liste d'épisodes
 class HorizontalEpisodeCardList extends StatelessWidget {
   final List<Episode> items;
 

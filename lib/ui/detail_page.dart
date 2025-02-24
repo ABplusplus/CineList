@@ -16,7 +16,6 @@ class MovieDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // On récupère le SeriesRepository via Provider ou directement en paramètre
     final seriesRepo = Provider.of<SeriesRepository>(context, listen: false);
 
     return ChangeNotifierProvider(
@@ -34,13 +33,11 @@ class MovieDetailPage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.favorite_border, color: Colors.black),
               onPressed: () {
-                // Gérer l'action "favorite"
               },
             ),
             IconButton(
               icon: const Icon(Icons.bookmark_border, color: Colors.black),
               onPressed: () {
-                // Gérer l'action "bookmark"
               },
             ),
           ],
@@ -51,7 +48,6 @@ class MovieDetailPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // Si aucune donnée chargée (cas rare), on affiche un texte
             if (detailNotifier.seriesDetails == null) {
               return const Center(child: Text("Aucune donnée"));
             }
@@ -60,16 +56,12 @@ class MovieDetailPage extends StatelessWidget {
             final List<EpisodeItem> episodes = detailNotifier.episodes;
             final List<UserRecommendation> recommendations = details.usersRecommendations ?? [];
 
-            // Construction de l'interface
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image du fanart ou poster
-                  // (selon si vous préférez utiliser details.fanart ou details.poster)
                   Stack(
                     children: [
-                      // Ex : Poster en plein écran
                       Image.network(
                         "https://simkl.in/posters/${details.poster}_w.webp",
                         width: double.infinity,
@@ -119,8 +111,6 @@ class MovieDetailPage extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                // Action trailer, par exemple :
-                                // Ouvrir un lien YouTube ou un autre widget
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFFF6F61),

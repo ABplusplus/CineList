@@ -19,7 +19,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        // Ici, on met le Provider de SeriesRepository
         Provider<SeriesRepository>(
           create: (_) => seriesRepository,
         ),

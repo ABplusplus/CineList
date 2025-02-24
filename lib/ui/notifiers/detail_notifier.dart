@@ -17,11 +17,9 @@ class DetailNotifier extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      // 1) Récupérer les détails de la série
       final detail = await seriesRepository.fetchSeriesDetails(id);
       seriesDetails = detail;
 
-      // 2) Récupérer la liste des épisodes (basé sur le simkl ID)
       final simklId = detail.ids?.simkl;
       final eps = await seriesRepository.fetchEpisodesByTVId(simklId!);
       episodes = eps;

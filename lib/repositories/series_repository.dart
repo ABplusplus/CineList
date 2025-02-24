@@ -20,7 +20,6 @@ class SeriesRepository {
     }
   }
 
-  // Fetch Anime (Ajouté)
   Future<TVs> fetchAnime() async {
     try {
       return await apiClient.getAllAnime();
