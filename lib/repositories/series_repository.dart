@@ -29,7 +29,7 @@ class SeriesRepository {
     }
   }
 
-  Future<ItemById> fetchSeriesDetails(String id) async {
+  Future<ItemById> fetchSeriesDetails(int id) async {
     try {
       return await apiClient.getSeriesDetails(id);
     } catch (e) {
@@ -37,7 +37,7 @@ class SeriesRepository {
     }
   }
 
-  Future<List<EpisodeItem>> fetchEpisodesByTVId(String id) async {
+  Future<List<EpisodeItem>> fetchEpisodesByTVId(int id) async {
     try {
       return await apiClient.getEpisodesByTVId(id);
     } catch (e) {

@@ -7,16 +7,34 @@ part of 'episode_item.dart';
 // **************************************************************************
 
 EpisodeItem _$EpisodeItemFromJson(Map<String, dynamic> json) => EpisodeItem(
-      title: json['title'] as String,
-      episode: (json['episode'] as num).toInt(),
-      airDate: json['airDate'] as String,
-      poster: json['poster'] as String,
+      season: (json['season'] as num?)?.toInt(),
+      episode: (json['episode'] as num?)?.toInt(),
+      type: json['type'] as String?,
+      aired: json['aired'] as bool?,
+      img: json['img'] as String?,
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      ids: json['ids'] == null
+          ? null
+          : EpisodeIds.fromJson(json['ids'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$EpisodeItemToJson(EpisodeItem instance) =>
     <String, dynamic>{
-      'title': instance.title,
+      'season': instance.season,
       'episode': instance.episode,
-      'airDate': instance.airDate,
-      'poster': instance.poster,
+      'type': instance.type,
+      'aired': instance.aired,
+      'img': instance.img,
+      'date': instance.date?.toIso8601String(),
+      'ids': instance.ids,
+    };
+
+EpisodeIds _$EpisodeIdsFromJson(Map<String, dynamic> json) => EpisodeIds(
+      simklId: (json['simkl_id'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$EpisodeIdsToJson(EpisodeIds instance) =>
+    <String, dynamic>{
+      'simkl_id': instance.simklId,
     };

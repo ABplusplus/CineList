@@ -19,23 +19,37 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => HomeNotifier(seriesRepository: seriesRepository)..fetchSeries(),
+      create: (context) =>
+      HomeNotifier(seriesRepository: seriesRepository)..fetchSeries(),
       child: Scaffold(
         backgroundColor: Colors.white,
         bottomNavigationBar: const BottomNavBar(currentRoute: '/'),
         body: Consumer<HomeNotifier>(
           builder: (context, homeNotifier, child) {
+            // Calcul de l'image du hero :
+            String? heroPoster;
+            if (!homeNotifier.isLoading) {
+              if (homeNotifier.newEpisodes.isNotEmpty) {
+                heroPoster = homeNotifier.newEpisodes.first.poster;
+              } else if (homeNotifier.mostWatchedThisMonth.isNotEmpty) {
+                heroPoster = homeNotifier.mostWatchedThisMonth.first.poster;
+              }
+            }
+            final heroImageUrl = heroPoster != null
+                ? "https://simkl.in/posters/${heroPoster}_w.webp"
+                : null;
+
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Hero Section
+                  // Hero Section modifiée
                   Stack(
                     children: [
                       Container(
                         height: 240,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFFF6F61), // Coral background
+                          color: Color(0xFFFF6F61), // Fond Coral
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(32),
                             bottomRight: Radius.circular(32),
@@ -43,21 +57,30 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).size.height * 0.02, // 2% from the top
-                        left: MediaQuery.of(context).size.width * 0.05, // 5% from the left
+                        top: MediaQuery.of(context).size.height * 0.02,
+                        left: MediaQuery.of(context).size.width * 0.05,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16), // Add border radius
-                          child: Image.asset(
-                            'assets/hunter_x_hunter.jpg',
-                            width: MediaQuery.of(context).size.width * 0.9, // 90% of the screen width
-                            height: MediaQuery.of(context).size.height * 0.25, // 25% of the screen height
+                          borderRadius: BorderRadius.circular(16),
+                          child: heroImageUrl != null
+                              ? Image.network(
+                            heroImageUrl,
+                            width:
+                            MediaQuery.of(context).size.width * 0.9,
+                            height:
+                            MediaQuery.of(context).size.height * 0.25,
                             fit: BoxFit.cover,
+                          )
+                              : Container(
+                            width:
+                            MediaQuery.of(context).size.width * 0.9,
+                            height:
+                            MediaQuery.of(context).size.height * 0.25,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 24),
 
                   // Buttons for "Shows" and "Anime"
@@ -161,7 +184,7 @@ class HorizontalEpisodeCardList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MovieDetailPage(),
+                  builder: (context) => MovieDetailPage(id: episode.ids!.simkl,),
                 ),
               );
             },
@@ -210,7 +233,7 @@ class HorizontalCardList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MovieDetailPage(),
+                  builder: (context) => MovieDetailPage(id: item.ids.simkl,),
                 ),
               );
             },
@@ -254,7 +277,7 @@ class HorizontalCardList3 extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MovieDetailPage(),
+                  builder: (context) => MovieDetailPage(id: item.ids.simkl,),
                 ),
               );
             },
@@ -278,3 +301,4 @@ class HorizontalCardList3 extends StatelessWidget {
     );
   }
 }
+

@@ -7,32 +7,38 @@ part of 'item_by_id.dart';
 // **************************************************************************
 
 ItemById _$ItemByIdFromJson(Map<String, dynamic> json) => ItemById(
-      title: json['title'] as String,
-      year: (json['year'] as num).toInt(),
-      type: json['type'] as String,
-      ids: IdsById.fromJson(json['ids'] as Map<String, dynamic>),
-      yearStartEnd: json['yearStartEnd'] as String,
-      rank: (json['rank'] as num).toInt(),
-      poster: json['poster'] as String,
-      fanart: json['fanart'] as String,
-      firstAired: json['firstAired'] as String,
-      lastAired: json['lastAired'] as String,
-      airs: Airs.fromJson(json['airs'] as Map<String, dynamic>),
-      runtime: (json['runtime'] as num).toInt(),
-      certification: json['certification'] as String,
-      overview: json['overview'] as String,
+      title: json['title'] as String?,
+      year: (json['year'] as num?)?.toInt(),
+      type: json['type'] as String?,
+      ids: json['ids'] == null
+          ? null
+          : IdsById.fromJson(json['ids'] as Map<String, dynamic>),
+      yearStartEnd: json['yearStartEnd'] as String?,
+      rank: (json['rank'] as num?)?.toInt(),
+      poster: json['poster'] as String?,
+      fanart: json['fanart'] as String?,
+      firstAired: json['firstAired'] as String?,
+      lastAired: ItemById._nullableString(json['lastAired']),
+      airs: json['airs'] == null
+          ? null
+          : Airs.fromJson(json['airs'] as Map<String, dynamic>),
+      runtime: (json['runtime'] as num?)?.toInt(),
+      certification: ItemById._nullableString(json['certification']),
+      overview: json['overview'] as String?,
       genres:
-          (json['genres'] as List<dynamic>).map((e) => e as String).toList(),
-      country: json['country'] as String,
-      totalEpisodes: (json['totalEpisodes'] as num).toInt(),
-      status: json['status'] as String,
-      network: json['network'] as String,
-      ratings: RatingsById.fromJson(json['ratings'] as Map<String, dynamic>),
-      trailers: (json['trailers'] as List<dynamic>)
-          .map((e) => Trailer.fromJson(e as Map<String, dynamic>))
+          (json['genres'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      country: json['country'] as String?,
+      totalEpisodes: (json['totalEpisodes'] as num?)?.toInt(),
+      status: json['status'] as String?,
+      network: json['network'] as String?,
+      ratings: json['ratings'] == null
+          ? null
+          : RatingsById.fromJson(json['ratings'] as Map<String, dynamic>),
+      trailers: (json['trailers'] as List<dynamic>?)
+          ?.map((e) => Trailer.fromJson(e as Map<String, dynamic>))
           .toList(),
-      usersRecommendations: (json['usersRecommendations'] as List<dynamic>)
-          .map((e) => UserRecommendation.fromJson(e as Map<String, dynamic>))
+      usersRecommendations: (json['users_recommendations'] as List<dynamic>?)
+          ?.map((e) => UserRecommendation.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -58,5 +64,5 @@ Map<String, dynamic> _$ItemByIdToJson(ItemById instance) => <String, dynamic>{
       'network': instance.network,
       'ratings': instance.ratings,
       'trailers': instance.trailers,
-      'usersRecommendations': instance.usersRecommendations,
+      'users_recommendations': instance.usersRecommendations,
     };

@@ -58,7 +58,7 @@ class _CinelistApiService implements CinelistApiService {
 
   @override
   Future<ItemById> getSeriesDetails(
-    String id, [
+    int id, [
     String extended = "full",
   ]) async {
     final _extra = <String, dynamic>{};
@@ -93,7 +93,7 @@ class _CinelistApiService implements CinelistApiService {
   }
 
   @override
-  Future<List<EpisodeItem>> getEpisodesByTVId(String id) async {
+  Future<List<EpisodeItem>> getEpisodesByTVId(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

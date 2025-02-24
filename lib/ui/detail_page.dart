@@ -1,183 +1,296 @@
+import 'package:cinelist/models/with_id/episode_item.dart';
+import 'package:cinelist/models/with_id/item_by_id.dart';
+import 'package:cinelist/models/with_id/user_recommendation.dart';
+import 'package:provider/provider.dart';
+import 'package:cinelist/repositories/series_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:cinelist/widgets/bottom_nav_bar.dart'; // Import the BottomNavBar widget
+import 'package:cinelist/ui/notifiers/detail_notifier.dart';
 
 class MovieDetailPage extends StatelessWidget {
-  const MovieDetailPage({Key? key}) : super(key: key);
+  final int id;
+
+  const MovieDetailPage({Key? key, required this.id}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
-            onPressed: () {
-              // Handle favorite action
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.bookmark_border, color: Colors.black),
-            onPressed: () {
-              // Handle bookmark action
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Movie Image
-            Stack(
-              children: [
-                Image.asset(
-                  'assets/hunter_x_hunter.jpg', // Replace with your image asset
-                  width: double.infinity,
-                  height: 240,
-                  fit: BoxFit.cover,
-                ),
-                const Positioned(
-                  bottom: 16,
-                  right: 16,
-                  child: Icon(
-                    Icons.favorite,
-                    size: 32,
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ],
-            ),
+    // On récupère le SeriesRepository via Provider ou directement en paramètre
+    final seriesRepo = Provider.of<SeriesRepository>(context, listen: false);
 
-            // Movie Details
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+    return ChangeNotifierProvider(
+      create: (_) => DetailNotifier(seriesRepository: seriesRepo)..fetchDetail(id),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.favorite_border, color: Colors.black),
+              onPressed: () {
+                // Gérer l'action "favorite"
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.bookmark_border, color: Colors.black),
+              onPressed: () {
+                // Gérer l'action "bookmark"
+              },
+            ),
+          ],
+        ),
+        body: Consumer<DetailNotifier>(
+          builder: (context, detailNotifier, child) {
+            if (detailNotifier.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            // Si aucune donnée chargée (cas rare), on affiche un texte
+            if (detailNotifier.seriesDetails == null) {
+              return const Center(child: Text("Aucune donnée"));
+            }
+
+            final ItemById details = detailNotifier.seriesDetails!;
+            final List<EpisodeItem> episodes = detailNotifier.episodes;
+            final List<UserRecommendation> recommendations = details.usersRecommendations ?? [];
+
+            // Construction de l'interface
+            return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Movie Title",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(
-                        "YYYY",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
+                  // Image du fanart ou poster
+                  // (selon si vous préférez utiliser details.fanart ou details.poster)
+                  Stack(
+                    children: [
+                      // Ex : Poster en plein écran
+                      Image.network(
+                        "https://simkl.in/posters/${details.poster}_w.webp",
+                        width: double.infinity,
+                        height: 240,
+                        fit: BoxFit.cover,
                       ),
-                      SizedBox(width: 16),
-                      Text(
-                        "EN/FR/ES",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
+                      const Positioned(
+                        bottom: 16,
+                        right: 16,
+                        child: Icon(
+                          Icons.favorite,
+                          size: 32,
+                          color: Colors.redAccent,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween ,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.timer, size: 20),
-                          SizedBox(width: 4),
-                          Text("0:00"),
-                          SizedBox(width: 16),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle trailer action
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF6F61), // Coral color
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                            ),
+
+                  // Informations principales
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          details.title ?? "",
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: const Text("Trailer",
-                        style: TextStyle(color: Colors.white)
+                        const SizedBox(height: 8),
+                        Text(
+                          "${details.year} • ${details.network} • ${details.status}",
+                          style: const TextStyle(fontSize: 16, color: Colors.grey),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.timer, size: 20),
+                                const SizedBox(width: 4),
+                                Text("${details.runtime} min"),
+                              ],
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Action trailer, par exemple :
+                                // Ouvrir un lien YouTube ou un autre widget
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFF6F61),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                "Trailer",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Description
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      details.overview ?? "",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Section Episodes
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Episodes",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  ScrollableEpisodeList(episodes: episodes),
+                  const SizedBox(height: 24),
+
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Recommandations",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  HorizontalRecommendationList(
+                    recommendations: recommendations,
                   ),
                 ],
               ),
-            ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
 
-            // Description
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: const Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-                    "Maecenas bibendum iaculis tortor volutpat mattis. "
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-                    "Curabitur malesuada sem sit amet massa egestas aliquet. "
-                    "Aliquam erat volutpat.",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            const SizedBox(height: 16),
 
-            // Horizontal Gallery
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: const Text(
-                "Gallery",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+class ScrollableEpisodeList extends StatelessWidget {
+  final List<EpisodeItem> episodes;
+
+  const ScrollableEpisodeList({Key? key, required this.episodes})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Filtrer les épisodes avec season et episode non null
+    final validEpisodes = episodes
+        .where((ep) => ep.season != null && ep.episode != null)
+        .toList();
+
+    // Trier par ordre décroissant (d'abord par season, puis par episode)
+    validEpisodes.sort((a, b) {
+      final seasonComparison = b.season!.compareTo(a.season!);
+      if (seasonComparison != 0) {
+        return seasonComparison;
+      }
+      return b.episode!.compareTo(a.episode!);
+    });
+
+    return SizedBox(
+      height: 250, // Hauteur fixe pour le conteneur des épisodes
+      child: ListView.builder(
+        itemCount: validEpisodes.length,
+        itemBuilder: (context, index) {
+          final episode = validEpisodes[index];
+          final formattedDate = DateFormat("dd MMM yyyy 'à' HH:mm", 'fr')
+              .format(episode.date ?? DateTime.now());
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Season ${episode.season}, Ep ${episode.episode}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const Divider(),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class HorizontalRecommendationList extends StatelessWidget {
+  final List<UserRecommendation> recommendations;
+
+  const HorizontalRecommendationList({
+    Key? key,
+    required this.recommendations,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 160, // Hauteur fixe pour la liste horizontale
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: recommendations.length,
+        itemBuilder: (context, index) {
+          final rec = recommendations[index];
+          final posterUrl = rec.poster != null
+              ? "https://simkl.in/posters/${rec.poster}_ca.webp"
+              : null;
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetailPage(
+                    id: rec.ids?.simkl ?? 0,
+                  ),
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16),
+                  image: posterUrl != null
+                      ? DecorationImage(
+                    image: NetworkImage(posterUrl),
+                    fit: BoxFit.cover,
+                  )
+                      : null,
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 120,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5, // Number of images in the gallery
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        'assets/sample_poster.jpg', // Replace with your image asset
-                        height: 120,
-                        width: 120,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
+          );
+        },
       ),
-      //bottomNavigationBar: const BottomNavBar(currentRoute: '/movie_detail'),
     );
   }
 }
