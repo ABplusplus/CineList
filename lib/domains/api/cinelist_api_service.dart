@@ -19,13 +19,13 @@ abstract class CinelistApiService {
 
   @GET("/tv/{id}")
   Future<ItemById> getSeriesDetails(
-      @Path("id") String id, [
+      @Path("id") int id, [
         @Query("extended") String extended = "full",
       ]);
 
   @GET("/tv/episodes/{id}")
   Future<List<EpisodeItem>> getEpisodesByTVId(
-      @Path("id") String id,
+      @Path("id") int id,
       );
 
   @GET("/tv/trending")

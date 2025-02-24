@@ -9,55 +9,62 @@ part 'item_by_id.g.dart';
 
 @JsonSerializable()
 class ItemById {
-  final String title;
-  final int year;
-  final String type;
-  final IdsById ids;
-  final String yearStartEnd;
-  final int rank;
-  final String poster;
-  final String fanart;
-  final String firstAired;
-  final String lastAired;
-  final Airs airs;
-  final int runtime;
-  final String certification;
-  final String overview;
-  final List<String> genres;
-  final String country;
-  final int totalEpisodes;
-  final String status;
-  final String network;
-  final RatingsById ratings;
-  final List<Trailer> trailers;
-  final List<UserRecommendation> usersRecommendations;
+  final String? title;
+  final int? year;
+  final String? type;
+  final IdsById? ids;
+  final String? yearStartEnd;
+  final int? rank;
+  final String? poster;
+  final String? fanart;
+  final String? firstAired;
+  @JsonKey(fromJson: _nullableString)
+  final String? lastAired;
+  final Airs? airs;
+  final int? runtime;
+  @JsonKey(fromJson: _nullableString)
+  final String? certification;
+  final String? overview;
+  final List<String>? genres;
+  final String? country;
+  final int? totalEpisodes;
+  final String? status;
+  final String? network;
+  final RatingsById? ratings;
+  final List<Trailer>? trailers;
+  @JsonKey(name: "users_recommendations")
+  final List<UserRecommendation>? usersRecommendations;
 
   ItemById({
-    required this.title,
-    required this.year,
-    required this.type,
-    required this.ids,
-    required this.yearStartEnd,
-    required this.rank,
-    required this.poster,
-    required this.fanart,
-    required this.firstAired,
-    required this.lastAired,
-    required this.airs,
-    required this.runtime,
-    required this.certification,
-    required this.overview,
-    required this.genres,
-    required this.country,
-    required this.totalEpisodes,
-    required this.status,
-    required this.network,
-    required this.ratings,
-    required this.trailers,
-    required this.usersRecommendations,
+    this.title,
+    this.year,
+    this.type,
+    this.ids,
+    this.yearStartEnd,
+    this.rank,
+    this.poster,
+    this.fanart,
+    this.firstAired,
+    this.lastAired,
+    this.airs,
+    this.runtime,
+    this.certification,
+    this.overview,
+    this.genres,
+    this.country,
+    this.totalEpisodes,
+    this.status,
+    this.network,
+    this.ratings,
+    this.trailers,
+    this.usersRecommendations,
   });
 
-  factory ItemById.fromJson(Map<String, dynamic> json) => _$ItemByIdFromJson(json);
+  factory ItemById.fromJson(Map<String, dynamic> json) =>
+      _$ItemByIdFromJson(json);
 
   Map<String, dynamic> toJson() => _$ItemByIdToJson(this);
+
+  static String? _nullableString(dynamic value) =>
+      value == null ? null : value as String;
 }

@@ -4,11 +4,11 @@ part 'airs.g.dart';
 
 @JsonSerializable()
 class Airs {
-  final String day;
-  final String time;
-  final String timezone;
+  final String? day;
+  final String? time;
+  final String? timezone;
 
-  Airs({required this.day, required this.time, required this.timezone});
+  Airs({this.day, this.time, this.timezone});
 
   factory Airs.fromJson(Map<String, dynamic> json) => _$AirsFromJson(json);
 

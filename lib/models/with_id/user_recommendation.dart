@@ -5,23 +5,28 @@ part 'user_recommendation.g.dart';
 
 @JsonSerializable()
 class UserRecommendation {
-  final String title;
-  final int year;
-  final String poster;
+  final String? title;
+  final int? year;
+  final String? poster;
+  @JsonKey(fromJson: _nullableString)
   final String? usersPercent;
-  final int usersCount;
-  final IdsById ids;
+  final int? usersCount;
+  final IdsById? ids;
 
   UserRecommendation({
-    required this.title,
-    required this.year,
-    required this.poster,
+    this.title,
+    this.year,
+    this.poster,
     this.usersPercent,
-    required this.usersCount,
-    required this.ids,
+    this.usersCount,
+    this.ids,
   });
 
-  factory UserRecommendation.fromJson(Map<String, dynamic> json) => _$UserRecommendationFromJson(json);
+  factory UserRecommendation.fromJson(Map<String, dynamic> json) =>
+      _$UserRecommendationFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRecommendationToJson(this);
+
+  static String? _nullableString(dynamic value) =>
+      value == null ? null : value as String;
 }

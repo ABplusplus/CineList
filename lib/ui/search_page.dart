@@ -65,7 +65,7 @@ class SearchPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MovieDetailPage(),
+                        builder: (context) => MovieDetailPage(id: item.ids.simkl),
                       ),
                     );
                   },

@@ -1,17 +1,29 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'rating_by_id.dart';
-
 part 'ratings_by_id.g.dart';
 
 @JsonSerializable()
+class RatingDetail {
+  final double? rating;
+  final int? votes;
+
+  RatingDetail({this.rating, this.votes});
+
+  factory RatingDetail.fromJson(Map<String, dynamic> json) =>
+      _$RatingDetailFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RatingDetailToJson(this);
+}
+
+@JsonSerializable()
 class RatingsById {
-  final RatingById simkl;
-  final RatingById imdb;
+  final RatingDetail? simkl;
+  final RatingDetail? imdb;
 
-  RatingsById({required this.simkl, required this.imdb});
+  RatingsById({this.simkl, this.imdb});
 
-  factory RatingsById.fromJson(Map<String, dynamic> json) => _$RatingsByIdFromJson(json);
+  factory RatingsById.fromJson(Map<String, dynamic> json) =>
+      _$RatingsByIdFromJson(json);
 
   Map<String, dynamic> toJson() => _$RatingsByIdToJson(this);
 }

@@ -184,7 +184,7 @@ class HorizontalEpisodeCardList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MovieDetailPage(),
+                  builder: (context) => MovieDetailPage(id: episode.ids!.simkl,),
                 ),
               );
             },
@@ -233,7 +233,7 @@ class HorizontalCardList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MovieDetailPage(),
+                  builder: (context) => MovieDetailPage(id: item.ids.simkl,),
                 ),
               );
             },
@@ -277,7 +277,7 @@ class HorizontalCardList3 extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MovieDetailPage(),
+                  builder: (context) => MovieDetailPage(id: item.ids.simkl,),
                 ),
               );
             },
@@ -301,3 +301,4 @@ class HorizontalCardList3 extends StatelessWidget {
     );
   }
 }
+
